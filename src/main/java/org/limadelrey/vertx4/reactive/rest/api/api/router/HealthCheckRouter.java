@@ -4,7 +4,7 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.healthchecks.HealthCheckHandler;
 import io.vertx.ext.healthchecks.Status;
 import io.vertx.ext.web.Router;
-import io.vertx.pgclient.PgPool;
+import io.vertx.mysqlclient.MySQLPool;
 
 public class HealthCheckRouter {
 
@@ -21,7 +21,7 @@ public class HealthCheckRouter {
      */
     public static void setRouter(Vertx vertx,
                                  Router router,
-                                 PgPool dbClient) {
+                                 MySQLPool dbClient) {
         final HealthCheckHandler healthCheckHandler = HealthCheckHandler.create(vertx);
 
         healthCheckHandler.register("database",

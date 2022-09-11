@@ -6,7 +6,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
-import io.vertx.pgclient.PgPool;
+import io.vertx.mysqlclient.MySQLPool;
 import org.limadelrey.vertx4.reactive.rest.api.api.handler.BookHandler;
 import org.limadelrey.vertx4.reactive.rest.api.api.handler.BookValidationHandler;
 import org.limadelrey.vertx4.reactive.rest.api.api.handler.ErrorHandler;
@@ -24,7 +24,7 @@ public class ApiVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> promise) {
-        final PgPool dbClient = DbUtils.buildDbClient(vertx);
+        final MySQLPool dbClient = DbUtils.buildDbClient(vertx);
 
         final BookRepository bookRepository = new BookRepository();
         final BookService bookService = new BookService(dbClient, bookRepository);

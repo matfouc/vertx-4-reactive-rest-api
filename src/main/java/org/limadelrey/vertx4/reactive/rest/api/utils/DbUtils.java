@@ -1,13 +1,12 @@
 package org.limadelrey.vertx4.reactive.rest.api.utils;
 
 import io.vertx.core.Vertx;
-import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.PgPool;
+import io.vertx.mysqlclient.MySQLConnectOptions;
+import io.vertx.mysqlclient.MySQLPool;
 import io.vertx.sqlclient.PoolOptions;
+import java.util.Properties;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
-
-import java.util.Properties;
 
 public class DbUtils {
 
@@ -27,10 +26,10 @@ public class DbUtils {
      * @param vertx Vertx context
      * @return PostgreSQL pool
      */
-    public static PgPool buildDbClient(Vertx vertx) {
+    public static MySQLPool buildDbClient(Vertx vertx) {
         final Properties properties = ConfigUtils.getInstance().getProperties();
 
-        final PgConnectOptions connectOptions = new PgConnectOptions()
+        final MySQLConnectOptions connectOptions = new MySQLConnectOptions ()
                 .setPort(Integer.parseInt(properties.getProperty(PORT_CONFIG)))
                 .setHost(properties.getProperty(HOST_CONFIG))
                 .setDatabase(properties.getProperty(DATABASE_CONFIG))
@@ -39,7 +38,7 @@ public class DbUtils {
 
         final PoolOptions poolOptions = new PoolOptions().setMaxSize(5);
 
-        return PgPool.pool(vertx, connectOptions, poolOptions);
+        return MySQLPool.pool(vertx, connectOptions, poolOptions);
     }
 
     /**
@@ -50,7 +49,7 @@ public class DbUtils {
     public static Configuration buildMigrationsConfiguration() {
         final Properties properties = ConfigUtils.getInstance().getProperties();
 
-        final String url = "jdbc:postgresql://" + properties.getProperty(HOST_CONFIG) + ":" + properties.getProperty(PORT_CONFIG) + "/" + properties.getProperty(DATABASE_CONFIG);
+        final String url = "jdbc:mariadb://" + properties.getProperty(HOST_CONFIG) + ":" + properties.getProperty(PORT_CONFIG) + "/" + properties.getProperty(DATABASE_CONFIG);
 
         return new FluentConfiguration().dataSource(url, properties.getProperty(USERNAME_CONFIG), properties.getProperty(PASSWORD_CONFIG));
     }

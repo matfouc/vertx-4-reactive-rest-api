@@ -3,7 +3,9 @@ package org.limadelrey.vertx4.reactive.rest.api.api.service;
 import io.vertx.core.Future;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import io.vertx.pgclient.PgPool;
+import io.vertx.mysqlclient.MySQLPool;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.limadelrey.vertx4.reactive.rest.api.api.model.Book;
 import org.limadelrey.vertx4.reactive.rest.api.api.model.BookGetAllResponse;
 import org.limadelrey.vertx4.reactive.rest.api.api.model.BookGetByIdResponse;
@@ -11,17 +13,14 @@ import org.limadelrey.vertx4.reactive.rest.api.api.repository.BookRepository;
 import org.limadelrey.vertx4.reactive.rest.api.utils.LogUtils;
 import org.limadelrey.vertx4.reactive.rest.api.utils.QueryUtils;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class BookService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookService.class);
 
-    private final PgPool dbClient;
+    private final MySQLPool dbClient;
     private final BookRepository bookRepository;
 
-    public BookService(PgPool dbClient,
+    public BookService(MySQLPool dbClient,
                        BookRepository bookRepository) {
         this.dbClient = dbClient;
         this.bookRepository = bookRepository;
@@ -45,7 +44,7 @@ public class BookService {
                     return bookRepository.count(connection)
                             .flatMap(total ->
                                     bookRepository.selectAll(connection, limit, offset)
-                                            .map(result -> {
+                                                .map(result -> {
                                                 final List<BookGetByIdResponse> books = result.stream()
                                                         .map(BookGetByIdResponse::new)
                                                         .collect(Collectors.toList());
